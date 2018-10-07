@@ -1,0 +1,12 @@
+export const ACCOUNT_CHANGED = 'web3.ACCOUNT_CHANGED';
+export const ACCOUNTS_LOADED = 'web3.ACCOUNTS_LOADED';
+export const NETWORK_CHANGED = 'web3.NETWORK_CHANGED';
+export const BALANCE_UPDATED = 'web3.BALANCE_UPDATED';
+export const WEB3_LOCKED = 'web3.WEB3_LOCKED';
+export const WEB3_UNLOCKED = 'web3.WEB3_UNLOCKED';
+export const WEB3_INSTALLED = 'web3.WEB3_INSTALLED';
+
+export const TX_STATUS_UPDATED = 'web3.TX_STATUS_UPDATED';
+export const RESET_LAST_TX = 'web3.RESET_LAST_TX';
+
+
