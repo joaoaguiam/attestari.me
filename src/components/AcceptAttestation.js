@@ -77,6 +77,9 @@ const styles = theme => ({
   wrap: {
     wordWrap: 'break-word'
   },
+  error: {
+    color: 'red'
+  }
 });
 
 class AcceptAttestation extends Component {
@@ -89,14 +92,22 @@ class AcceptAttestation extends Component {
       propsName: '',
       propsEmail: '',
       propsAvatar: '',
-      isCompleted: false
+      isCompleted: false,
+      isValidSignature: true,
     };
   }
-  componentDidMount = () => {
+  componentDidMount = async () => {
     const { attestorAddress } = this.props.match.params;
 
     this.props.dispatch(initWeb3());
     this.props.dispatch(load3BoxPublicProfile(attestorAddress));
+    const { requestorAddress, skillName, attestationSignature, requesterName, skillTimeStamp, timeStamp } = this.props.match.params;
+
+    const message = `I attest that user ${decodeURIComponent(requesterName)} (${requestorAddress}) has the following skill: ${skillName} (${skillTimeStamp}). Generated at ${timeStamp}`;
+    let isValidSignature = await web3Selectors.verifySigner(message, attestationSignature, attestorAddress);
+    // debugger;
+    this.setState({ isValidSignature });
+
   }
   static getDerivedStateFromProps(props, state) {
     if (state.propsName !== props.profile3Box.name) {
@@ -139,12 +150,12 @@ class AcceptAttestation extends Component {
     this.setState({ isCompleted: true })
   }
   render() {
-    const { requestorAddress, skillName, attestationSignature, attestorAddress } = this.props.match.params;
+    const { requestorAddress, skillName, attestationSignature, attestorAddress, requesterName, skillTimeStamp, timeStamp } = this.props.match.params;
 
     const { classes, web3Address, is3BoxLoaded } = this.props;
-    // const message = `I attest that user ${decodeURIComponent(requesterName)} (${requestorAddress}) has the following skill: ${skillName} (${skillTimeStamp}). Generated at ${timeStamp}`;
-    // let isValidSignature = web3Selectors.verifySigner(message, attestationSignature, attestorAddress);
-
+    const message = `I attest that user ${decodeURIComponent(requesterName)} (${requestorAddress}) has the following skill: ${skillName} (${skillTimeStamp}). Generated at ${timeStamp}`;
+    let isValidSignature = this.state.isValidSignature;
+    console.log("valid:" + isValidSignature);
     return (
       <React.Fragment>
         <div className={classnames(classes.containerWhite, classes.containerPadding)}>
@@ -156,13 +167,17 @@ class AcceptAttestation extends Component {
           {/* <Typography variant="subheading" >Created: <span className={classes.textSecondary}>{moment(skillTimeStamp).fromNow()}</span></Typography> */}
           <Typography variant="subheading" gutterBottom>Attestation Signature: <span className={classnames(classes.textSecondary, classes.wrap)}>{attestationSignature}</span></Typography>
 
-          {!is3BoxLoaded && web3Address === requestorAddress && (
+          {!isValidSignature && (
+            <Typography align="center" className={classes.error}>Signature not valid!!!</Typography>
+          )}
+
+          {isValidSignature && !is3BoxLoaded && web3Address === requestorAddress && (
             <div className={classes.centerContainer}>
               <Button variant="contained" color="primary" className={classes.button} onClick={this.load3Box} disabled={web3Address === ''}>Load 3Box Profile</Button>
             </div>
           )}
 
-          {is3BoxLoaded && (
+          {isValidSignature && is3BoxLoaded && (
             <React.Fragment>
 
               {this.props.profile3Box.name !== '' && (<Typography variant="subheading" >Your 3Box Name: <span className={classes.textSecondary}>{this.props.profile3Box.name}</span></Typography>)}

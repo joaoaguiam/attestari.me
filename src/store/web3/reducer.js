@@ -1,6 +1,8 @@
 // import _ from 'lodash';
 import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
+import utils from 'ethereumjs-util';
+import Web3 from 'web3';
 
 const initialState = Immutable({
     accounts: [],
@@ -144,13 +146,61 @@ export function getEtherScanLinkAddress(networkId, address) {
 }
 
 export const verifySigner = async (message, signature, signer) => {
-    debugger;
-    // const signingAddress = await window.web3.eth.accounts.recover(message, signature);
+    try {
+        let web3 = new Web3(new Web3.providers.WebsocketProvider('wss://mainnet.infura.io/ws'));
+        const signingAddress = await web3.eth.accounts.recover(message, signature);
+        return signingAddress.toUpperCase() === signer.toUpperCase();
+    }
+    catch (error) {
+        return false;
+    }
+    // window.web3.personal.ecRecover(message, signature, function (error, result) {
+    //     if (!error)
+    //         console.log(result)
+    //     else
+    //         console.error(error);
+    // })
 
-    window.web3.personal.ecRecover(message, signature, function (error, result) {
-        console.log(result);
-        debugger;
-    });
-    // return (signingAddress === signer);
+    // return;
+    // // window.web3.personal.ecRecover(message, signature, function (error, result) {
+    // //     console.log(result);
+    // //     debugger;
+    // // });
+    // var msg = '0x' + Buffer.from(message, 'utf8').toString('hex')
+
+    // // let r = utils.toBuffer(signature.slice(0, 64))
+    // // let s = utils.toBuffer('0x' + signature.slice(64, 128))
+    // // let v = utils.toBuffer('0x' + signature.slice(128, 130)+27)
+    // // // let m = utils.toBuffer(message)
+    // // let pub = utils.ecrecover(msg, v, r, s)
+    // // let adr = '0x' + utils.pubToAddress(pub).toString('hex')
+
+
+    // var messageBuffer = new Buffer(msg, 'hex');
+    // // console.log('message: ', message);
+    // signature = signature.split('x')[1];
+
+    // var r = new Buffer(signature.substring(0, 64), 'hex')
+    // var s = new Buffer(signature.substring(64, 128), 'hex')
+    // var v = new Buffer((parseInt(signature.substring(128, 130)) + 27).toString());
+
+    // // r = utils.toBuffer(sgn.slice(0,66))
+    // // s = utils.toBuffer('0x' + sgn.slice(66,130))
+    // // v = utils.toBuffer('0x' + sgn.slice(130,132))
+    // // m = utils.toBuffer(msg)
+    // // pub = utils.ecrecover(m, v, r, s)
+    // // adr = '0x' + utils.pubToAddress(pub).toString('hex')
+
+    // // console.log('r s v: ', r, s , v)
+
+    // // console.log('v: ', v)
+
+    // var pub = utils.ecrecover(messageBuffer, v, r, s);
+
+    // var adr = '0x' + utils.pubToAddress(pub).toString('hex')
+
+    // console.log('recoveredAddress: ', signingAddress);
+    // console.log('signer: ', signer);
+    // // return (signingAddress === signer);
 }
 
