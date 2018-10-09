@@ -13,11 +13,10 @@ export function load3box(address) {
       box = await ThreeBox.openBox(address, web3Selectors.getWeb3Provider());
       let name = await box.public.get('name');
       let email = await box.private.get('email');
-      let avatar = await box.public.get('avatar');
-      let skills = await box.public.get('skills');
-      let attestations = await box.public.get('attestations');
-      let pendingAttestations = await box.private.get('pendingAttestations');
-
+      let avatar = await box.public.get('image');
+      let skills = await box.public.get('attestari.skills');
+      let attestations = await box.public.get('attestari.attestations');
+      let pendingAttestations = await box.private.get('attestari.pendingAttestations');
 
       name = name ? name : '';
       email = email ? email : '';
@@ -64,7 +63,7 @@ export function update3BoxSkills(skills) {
         throw new Error("No 3Box available");
       }
       dispatch(globalAppActions.setLoading());
-      await box.public.set('skills', skills);
+      await box.public.set('attestari.skills', skills);
       dispatch({ type: types.SKILLS_UPDATED, skills });
       dispatch(globalAppActions.unsetLoading());
     } catch (error) {
@@ -81,7 +80,7 @@ export function load3BoxSkills() {
         throw new Error("No 3Box available");
       }
       dispatch(globalAppActions.setLoading());
-      let skills = await box.public.get('skills');
+      let skills = await box.public.get('attestari.skills');
       if (!skills) {
         skills = [];
       }
@@ -100,7 +99,7 @@ export function load3BoxAttestations() {
         throw new Error("No 3Box available");
       }
       dispatch(globalAppActions.setLoading());
-      let attestations = await box.public.get('attestations');
+      let attestations = await box.public.get('attestari.attestations');
       if (!attestations) {
         attestations = {};
       }
@@ -118,7 +117,7 @@ export function update3BoxAttestations(attestations) {
         throw new Error("No 3Box available");
       }
       dispatch(globalAppActions.setLoading());
-      await box.public.set('attestations', attestations);
+      await box.public.set('attestari.attestations', attestations);
       dispatch({ type: types.ATTESTATIONS_UPDATED, attestations });
       dispatch(globalAppActions.unsetLoading());
     } catch (error) {
@@ -135,7 +134,7 @@ export function load3BoxPendingAttestations() {
         throw new Error("No 3Box available");
       }
       dispatch(globalAppActions.setLoading());
-      let pendingAttestations = await box.private.get('pendingAttestations');
+      let pendingAttestations = await box.private.get('attestari.pendingAttestations');
       if (!pendingAttestations) {
         pendingAttestations = {};
       }
@@ -153,7 +152,7 @@ export function update3BoxPendingAttestations(pendingAttestations) {
         throw new Error("No 3Box available");
       }
       dispatch(globalAppActions.setLoading());
-      await box.private.set('pendingAttestations', pendingAttestations);
+      await box.private.set('attestari.pendingAttestations', pendingAttestations);
       dispatch({ type: types.PENDING_ATTESTATIONS_UPDATED, pendingAttestations });
       dispatch(globalAppActions.unsetLoading());
     } catch (error) {
@@ -166,10 +165,12 @@ export function load3BoxPublicProfile(userAddress) {
   return async (dispatch, getState) => {
     try {
       dispatch(globalAppActions.setLoading());
+      debugger;
       const publicProfile = await ThreeBox.getProfile(userAddress);
       dispatch({ type: types.PUBLIC_PROFILE_LOADED, publicProfile });
       dispatch(globalAppActions.unsetLoading());
     } catch (error) {
+      debugger;
       dispatch(globalAppActions.unsetLoading());
 
       // throw error;

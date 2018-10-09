@@ -110,7 +110,7 @@ const addPendingAttestation = async (requestorAddress, requestorName, requestorE
     await writeNode(rootPosition, key, pendingAttestation);
 
 
-    await fetch('https://us-central1-taiga-events-dev.cloudfunctions.net/sendAttestationEmail', {
+    await fetch('https://us-central1-attestari.cloudfunctions.net/sendAttestationEmail', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -120,15 +120,6 @@ const addPendingAttestation = async (requestorAddress, requestorName, requestorE
         pendingAttestation
       )
     })
-
-    // await fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ a: 7, str: 'Some string: &=&' })
-    // });
 
     return pendingAttestation;
   } catch (error) {
@@ -145,7 +136,7 @@ const addApprovedAttestation = async (skillName, skillTimeStamp, attestorName, a
     }
 
 
-    await fetch('https://us-central1-taiga-events-dev.cloudfunctions.net/sendApprovedAttestationEmail', {
+    await fetch('https://us-central1-attestari.cloudfunctions.net/sendApprovedAttestationEmail', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

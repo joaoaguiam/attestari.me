@@ -121,7 +121,8 @@ class AcceptAttestation extends Component {
 
   render() {
     const { address } = this.props.match.params;
-    const { name, attestations } = this.props.publicProfile;
+    const { name } = this.props.publicProfile;
+    const attestations = this.props.publicProfile['attestari.attestations'];
     if (!attestations) {
       return null;
     }
@@ -136,6 +137,9 @@ class AcceptAttestation extends Component {
 
           <Typography variant="subheading" >Name: <span className={classes.textSecondary}>{name}</span></Typography>
           <Typography variant="subheading" gutterBottom>Address: <span className={classes.textSecondary}>{address}</span></Typography>
+          <br />
+          <Typography variant="title" gutterBottom align="center">Received attestations</Typography>
+
           {skills.map(skill => {
             return (
               <React.Fragment key={skill}>
@@ -150,6 +154,8 @@ class AcceptAttestation extends Component {
                     )
                   })
                 }
+                <br />
+                <br />
               </React.Fragment>
             )
           }

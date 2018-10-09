@@ -1,7 +1,6 @@
 // import _ from 'lodash';
 import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
-import utils from 'ethereumjs-util';
 import Web3 from 'web3';
 
 const initialState = Immutable({

@@ -39,41 +39,77 @@ const sendEmail = (emailAddress, subject, html) => {
   }
 };
 
-exports.sendAttestationEmail2 = functions.https.onRequest((request, response) => {
-  const pendingAttestation = request.body.penddingAttestation;
-  const { requestorName, requestorAddress, skillName, skillSignature, skillTimeStamp, attestatorEmail } = pendingAttestation;
-  let url = encodeURIComponent(`http://localhost:3000/attest/${requestorAddress}/${skillName}/${skillTimeStamp}/${skillSignature}/${attestatorEmail}`);
-
-  const emailBody = `<p>Hi!</p>
-          <br />
-          <p>You have been asked by ${requestorName} to attest that he/she knows ${skillName}.</p>
-          <br />
-          <p><a href="${url}>Click here</a> to accept this attestation.</p>
-          <br />
-          <p>AttestU.me</p>
-          `;
-
-  sendEmail(attestatorEmail, "AttestU.me - Request to attest received", emailBody).then(res => {
-    response.json({ msg: "Email sent" }).send();
-  });
+// cors
+const cors = require('cors')({
+  origin: true
 });
 
-// const emailBody = `<p>Hi ${newAplicantProfile.firstName}!</p>
-//       <p>Your staking transaction has been completed!</p>
-//       <br />
-//       <p>This doesn't mean that you have been accepted, we will still need to evaluate each application.</p>
-//       <p>We will get in touch with you once we have a decision about your application.</p>
-//       <br/>
-//       <p>You have staked ${amountInEther} ether that will be returned to you in case you attend the ETHDenver 2019.</p>
+exports.sendAttestationEmail = functions.https.onRequest((request, response) => {
+  return cors(request, response, async () => {
+    try {
+      console.log(request.body);
+      const pendingAttestation = request.body;
+      console.log(pendingAttestation);
+      const { requestorName, requestorAddress, requestorEmail, skillName, skillSignature, skillTimeStamp, attestatorEmail } = pendingAttestation;
+      let url = `https://attestari.me/attest/${encodeURIComponent(requestorAddress)}/${encodeURIComponent(skillName)}/${encodeURIComponent(skillTimeStamp)}/${encodeURIComponent(skillSignature)}/${encodeURIComponent(attestatorEmail)}/${encodeURIComponent(requestorEmail)}`;
+      console.log(url);
+      const emailBody = `<p>Hi!</p>
+      <br />
+      <p>Your friend <b>${requestorName}</b> asked you to attest that he/she knows <b>${skillName}</b>.</p>
+      <br />
+      <p>Please <a href="${url}">click here</a> to attest ${requestorName}.</p>
+      <br />
+      <p>Attestari.me</p>
+      `;
+      console.log(emailBody);
+      sendEmail(attestatorEmail, `Attestari.me - Request to attest ${requestorName}`, emailBody).then(res => {
+        response.status(200).send();
+        return '';
+      }).catch(error => {
+        console.log(error);
+      });
+    } catch (error) {
+      console.log(error);
+      // console.log(`Error creating custom token for user ${address}: ${error}`);
+      response.status(500).send('Authentication failed');
+    }
+  });
 
-//       <br />
-//       <p>Thank you for willing to be part of this new decentralized world and we wish you good luck!</p>
-//       <br />
-//       <p>The ETHDenver team.<br/>https://www.ethdenver.com/</p>
-//       `;
 
-// await sendEmail(
-//   userEmail,
-//   "ETHDenver - Your staking has been confirmed",
-//   emailBody
-// );
+
+});
+
+exports.sendApprovedAttestationEmail = functions.https.onRequest((request, response) => {
+  return cors(request, response, async () => {
+    try {
+      console.log(request.body);
+      const attestation = request.body;
+      console.log(attestation);
+      const { skillName, skillTimeStamp, attestorName, attestorAddress, timeStamp, attestationSignature, requestorAddress, requestorEmail, requesterName } = attestation;
+      let url = `http://localhost:3000/acceptAttestation/${encodeURIComponent(requestorAddress)}/${encodeURIComponent(skillName)}/${encodeURIComponent(skillTimeStamp)}/${encodeURIComponent(attestationSignature)}/${encodeURIComponent(attestorAddress)}/${timeStamp}/${encodeURIComponent(requesterName)}`;
+
+      const emailBody = `<p>Hi ${requestorAddress}!</p>
+      <br />
+      <p>Good news!!! Your friend <b>${attestorName}</b> has just confirmed that you know <b>${skillName}</b>.</p>
+      <br />
+      <p>Please <a href="${url}">click here</a> to store your attestation on your Ethereum Profile.</p>
+      <br />
+      <p>Your friend from Attestari.me</p>
+      <p><small>Let's build this global network of attestations together, ask your friends for attestations!<small></p>
+      `;
+      console.log(emailBody);
+      sendEmail(requestorEmail, `Attestari.me - Attestation received from ${attestorName}`, emailBody).then(res => {
+        response.status(200).send();
+        return '';
+      }).catch(error => {
+        console.log(error);
+      });
+    } catch (error) {
+      console.log(error);
+      response.status(500).send('Authentication failed');
+    }
+  });
+
+
+
+});

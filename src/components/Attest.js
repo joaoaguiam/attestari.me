@@ -80,6 +80,9 @@ const styles = theme => ({
   wrap: {
     wordWrap: 'break-word'
   },
+  small: {
+    fontSize: '9pt'
+  }
 });
 
 class Attest extends Component {
@@ -142,13 +145,15 @@ class Attest extends Component {
     return (
       <React.Fragment>
         <div className={classnames(classes.containerWhite, classes.containerPadding)}>
-          <Typography variant="headline" gutterBottom>You have been asked to send an attestation!</Typography>
+          <Typography variant="headline" gutterBottom align="center">You have been asked to send an attestation!</Typography>
+          <br />
           <Typography variant="subheading" >Requestor Name: <span className={classes.textSecondary}>{this.props.publicProfile.name}</span></Typography>
           <Typography variant="subheading" >Requestor Email: <span className={classes.textSecondary}>{decodeURIComponent(requestorEmail)}</span></Typography>
           <Typography variant="subheading" gutterBottom>Requestor Address: <span className={classes.textSecondary}>{requestorAddress}</span></Typography>
+          <br />
           <Typography variant="subheading" >Skill: <span className={classes.textSecondary}>{skillName}</span></Typography>
           {/* <Typography variant="subheading" >Created: <span className={classes.textSecondary}>{moment(skillTimeStamp).fromNow()}</span></Typography> */}
-          <Typography variant="subheading" gutterBottom>Skill Signature: <span className={classnames(classes.textSecondary, classes.wrap)}>{skillSignature}</span></Typography>
+          <Typography variant="subheading" gutterBottom>Skill Signature: <span className={classnames(classes.textSecondary, classes.wrap, classes.small)}>{skillSignature}</span></Typography>
 
           <Typography variant="subheading">Your Address: <span className={classes.profileValue}>{web3Address}</span></Typography>
           {!is3BoxLoaded && web3Address !== requestorAddress && (

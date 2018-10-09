@@ -28,14 +28,15 @@ export default function reduce(state = initialState, action = {}) {
   switch (action.type) {
     case types.LOADED_3BOX:
 
+
       return state.merge({
         name: action.name,
         email: action.email,
         avatar: action.avatar,
         address: action.address,
-        skills: action.skills,
-        attestations: action.attestations,
-        pendingAttestations: action.pendingAttestations,
+        skills: action.skills ? action.skills : state.skills,
+        attestations: action.attestations ? action.attestations : state.attestations,
+        pendingAttestations: action.pendingAttestations ? action.pendingAttestations : state.pendingAttestations,
         isLoaded: true
       });
 

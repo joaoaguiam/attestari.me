@@ -333,6 +333,7 @@ class MySkills extends Component {
               <TableBody>
 
                 {this.state.skills.map(skill => {
+                  if (!attestations) debugger;
                   let numAttestations = attestations[skill.name] ? Object.keys(attestations[skill.name]).length : 0;
                   return (
                     <TableRow key={skill.name}>

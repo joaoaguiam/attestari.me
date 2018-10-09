@@ -150,22 +150,24 @@ class AcceptAttestation extends Component {
     this.setState({ isCompleted: true })
   }
   render() {
-    const { requestorAddress, skillName, attestationSignature, attestorAddress, requesterName, skillTimeStamp, timeStamp } = this.props.match.params;
+    const { requestorAddress, skillName, attestationSignature, attestorAddress } = this.props.match.params;
 
     const { classes, web3Address, is3BoxLoaded } = this.props;
-    const message = `I attest that user ${decodeURIComponent(requesterName)} (${requestorAddress}) has the following skill: ${skillName} (${skillTimeStamp}). Generated at ${timeStamp}`;
     let isValidSignature = this.state.isValidSignature;
     console.log("valid:" + isValidSignature);
     return (
       <React.Fragment>
         <div className={classnames(classes.containerWhite, classes.containerPadding)}>
-          <Typography variant="headline" gutterBottom>You have been attested!</Typography>
+          <Typography variant="headline" align="center" gutterBottom>You have been attested!</Typography>
+          <br />
           <Typography variant="subheading" >Attestor Name: <span className={classes.textSecondary}>{this.props.publicProfile.name}</span></Typography>
           <Typography variant="subheading" >Attestor Address: <span className={classes.textSecondary}>{attestorAddress}</span></Typography>
-
+          <br />
           <Typography variant="subheading" >Skill: <span className={classes.textSecondary}>{skillName}</span></Typography>
+          <br />
           {/* <Typography variant="subheading" >Created: <span className={classes.textSecondary}>{moment(skillTimeStamp).fromNow()}</span></Typography> */}
           <Typography variant="subheading" gutterBottom>Attestation Signature: <span className={classnames(classes.textSecondary, classes.wrap)}>{attestationSignature}</span></Typography>
+          <br />
 
           {!isValidSignature && (
             <Typography align="center" className={classes.error}>Signature not valid!!!</Typography>
