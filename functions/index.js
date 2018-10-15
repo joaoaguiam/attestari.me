@@ -44,6 +44,8 @@ const cors = require('cors')({
   origin: true
 });
 
+const urlBase = "https://attestari.me";
+
 exports.sendAttestationEmail = functions.https.onRequest((request, response) => {
   return cors(request, response, async () => {
     try {
@@ -51,7 +53,7 @@ exports.sendAttestationEmail = functions.https.onRequest((request, response) => 
       const pendingAttestation = request.body;
       console.log(pendingAttestation);
       const { requestorName, requestorAddress, requestorEmail, skillName, skillSignature, skillTimeStamp, attestatorEmail } = pendingAttestation;
-      let url = `https://attestari.me/attest/${encodeURIComponent(requestorAddress)}/${encodeURIComponent(skillName)}/${encodeURIComponent(skillTimeStamp)}/${encodeURIComponent(skillSignature)}/${encodeURIComponent(attestatorEmail)}/${encodeURIComponent(requestorEmail)}`;
+      let url = `${urlBase}/attest/${encodeURIComponent(requestorAddress)}/${encodeURIComponent(skillName)}/${encodeURIComponent(skillTimeStamp)}/${encodeURIComponent(skillSignature)}/${encodeURIComponent(attestatorEmail)}/${encodeURIComponent(requestorEmail)}`;
       console.log(url);
       const emailBody = `<p>Hi!</p>
       <br />
@@ -86,7 +88,7 @@ exports.sendApprovedAttestationEmail = functions.https.onRequest((request, respo
       const attestation = request.body;
       console.log(attestation);
       const { skillName, skillTimeStamp, attestorName, attestorAddress, timeStamp, attestationSignature, requestorAddress, requestorEmail, requesterName } = attestation;
-      let url = `http://localhost:3000/acceptAttestation/${encodeURIComponent(requestorAddress)}/${encodeURIComponent(skillName)}/${encodeURIComponent(skillTimeStamp)}/${encodeURIComponent(attestationSignature)}/${encodeURIComponent(attestorAddress)}/${timeStamp}/${encodeURIComponent(requesterName)}`;
+      let url = `${urlBase}/acceptAttestation/${encodeURIComponent(requestorAddress)}/${encodeURIComponent(skillName)}/${encodeURIComponent(skillTimeStamp)}/${encodeURIComponent(attestationSignature)}/${encodeURIComponent(attestorAddress)}/${timeStamp}/${encodeURIComponent(requesterName)}`;
 
       const emailBody = `<p>Hi ${requestorAddress}!</p>
       <br />

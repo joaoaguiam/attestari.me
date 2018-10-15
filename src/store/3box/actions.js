@@ -1,9 +1,11 @@
 import * as types from './actionTypes';
-import ThreeBox from '3box';
+/*global ThreeBox*/
+
 import * as web3Selectors from '../web3/reducer';
 import * as profile3BoxSelectors from '../3box/reducer';
 import * as globalAppActions from '../global-app/actions';
 
+// var ThreeBox = require('3box');
 let box = undefined;
 
 export function load3box(address) {
